@@ -4,7 +4,7 @@
 # Based on the file created for Arch Linux by: Frank Vanderham
 
 _linuxprefix=linux66
-_extramodules=extramodules-6.6-MANJARO
+_kernver="$(cat /usr/src/${_linuxprefix}/version)"
 pkgname=$_linuxprefix-broadcom-wl
 _pkgname=broadcom-wl
 pkgver=6.30.223.271
@@ -19,13 +19,11 @@ makedepends=("broadcom-wl-dkms>=$pkgver"
              "$_linuxprefix" "$_linuxprefix-headers")
 groups=("$_linuxprefix-extramodules")
 provides=("$_pkgname=$pkgver")
-install=$_pkgname.install
 backup=('etc/modprobe.d/$_linuxprefix-broadcom-wl.conf')
 source=(broadcom-wl-dkms.conf)
 sha256sums=('b97bc588420d1542f73279e71975ccb5d81d75e534e7b5717e01d6e6adf6a283')
 
 build() {
-  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
   # build host modules
   msg2 'Build module'
@@ -39,12 +37,11 @@ build() {
 }
 
 package(){
-  _kernver="$(cat /usr/lib/modules/${_extramodules}/version)"
 
-  install -dm755 "$pkgdir/usr/lib/modules/$_extramodules"
+  install -dm755 "$pkgdir/usr/lib/modules/${_kernver}/extramodules"
   cd "broadcom-wl/$pkgver/$_kernver/$CARCH/module"
-  install -m 644 * "$pkgdir/usr/lib/modules/$_extramodules"
+  install -m 644 * "$pkgdir/usr/lib/modules/${_kernver}/extramodules"
   find "$pkgdir" -name '*.ko' -exec gzip -9 {} +
-  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='$_extramodules'/" "$startdir/$_pkgname.install"
+  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${_kernver}/extramodules'/" "$startdir/$_pkgname.install"
   install -D -m 644 "${srcdir}/broadcom-wl-dkms.conf" "${pkgdir}/etc/modprobe.d/${_linuxprefix}-broadcom-wl.conf"
 }
