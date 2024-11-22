@@ -7,7 +7,7 @@ _linuxprefix=linux66
 _module=broadcom-wl
 pkgname="${_linuxprefix}-${_module}"
 pkgver=6.30.223.271
-pkgrel=93
+pkgrel=94
 pkgdesc='Broadcom 802.11 Linux STA wireless driver'
 arch=('x86_64')
 url='https://www.broadcom.com/support/download-search/?pf=Wireless+LAN+Infrastructure'
@@ -29,7 +29,7 @@ package(){
     ${_module}/${pkgver}/${_kernver}/${CARCH}/module/*
 
   # compress kernel modules
-  find "$pkgdir" -name "*.ko" -exec xz {} +
+  find "${pkgdir}" -name '*.ko' -exec zstd --rm -19 {} +
 
   install -Dm644 "/usr/share/licenses/${_module}-dkms"/* -t \
     "${pkgdir}/usr/share/licenses/$pkgname/"
