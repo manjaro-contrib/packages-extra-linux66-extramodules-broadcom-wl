@@ -7,7 +7,7 @@ _linuxprefix=linux66
 _module=broadcom-wl
 pkgname="${_linuxprefix}-${_module}"
 pkgver=6.30.223.271
-pkgrel=95
+pkgrel=96
 pkgdesc='Broadcom 802.11 Linux STA wireless driver'
 arch=('x86_64')
 url='https://www.broadcom.com/support/download-search/?pf=Wireless+LAN+Infrastructure'
@@ -15,6 +15,7 @@ license=('custom')
 groups=("${_linuxprefix}-extramodules")
 depends=("${_linuxprefix}")
 makedepends=("${_module}-dkms=$pkgver" "${_linuxprefix}-headers")
+provides=("${_module}")
 
 build() {
   _kernver="$(cat /usr/src/${_linuxprefix}/version)"
